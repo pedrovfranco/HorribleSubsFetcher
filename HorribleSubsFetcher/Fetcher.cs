@@ -74,7 +74,7 @@ namespace HorribleSubsFetcher
                     string title = result[i].FirstChild.GetAttributeValue("title", null);
                     if (title != null)
                     {
-                        int distance = Levenshtein(name, title);
+                        int distance = DamerauLevenshtein(name, title);
 
                         if (distance < leastDistance)
                         {
@@ -185,9 +185,9 @@ namespace HorribleSubsFetcher
                     else
                         cost = (Char.ToLower(a[i - 1]) == Char.ToLower(b[j - 1])) ? 0 : 1;
 
-                    int min = aux[i - 1][j] + 1;
-                    min = Math.Min(min, aux[i][j - 1] + 1);
-                    min = Math.Min(min, aux[i - 1][j - 1] + cost);
+                    int min = aux[i - 1][j] + 1; // Deletion
+                    min = Math.Min(min, aux[i][j - 1] + 1); // Insertion
+                    min = Math.Min(min, aux[i - 1][j - 1] + cost); // Modification
 
                     aux[i][j] = min;
                 }
@@ -196,60 +196,49 @@ namespace HorribleSubsFetcher
             return aux[a.Length][b.Length];
         }
 
-        // Infinite loop for some reason. Do not use
-        public static int Levenshtein2(string a, string b, int i = -1, int j = -1)
-        {
-            if (i == -1)
-                i = a.Length;
-            if (j == -1)
-                j = b.Length;
-
-            int min = Int32.MaxValue;
-
-            if (i == 0 || j == 0)
-                return 0;
-
-            int indicator = (a[i - 1] == b[j - 1]) ? 0 : 1;
-
-            min = Math.Min(min, Levenshtein2(a, b, i - 1, j) + 1);
-            min = Math.Min(min, Levenshtein2(a, b, i, j - 1) + 1);
-            min = Math.Min(min, Levenshtein2(a, b, i - 1, j - 1) + indicator);
-
-            return min;
-        }
-
         // Not working properly. Do not use
-        public static int DamerauLevenshtein(string a, string b, int i = Int32.MinValue, int j = Int32.MinValue)
+        public static int DamerauLevenshtein(string a, string b, bool caseSensitive = false)
         {
-            if (i == Int32.MinValue)
-                i = a.Length;
-            if (j == Int32.MinValue)
-                j = b.Length;
+            // Declare auxiliary matrix
+            int[][] aux = new int[a.Length + 1][];
+            for (int i = 0; i < aux.Length; i++)
+                aux[i] = new int[b.Length + 1];
 
-            int min = Int32.MaxValue;
-
-            if (i <= 0 && j <= 0)
-                return 0;
-
-            if (i > 0)
-                min = Math.Min(min, DamerauLevenshtein(a, b, i - 1, j) + 1);
-
-            if (j > 0)
-                min = Math.Min(min, DamerauLevenshtein(a, b, i, j - 1) + 1);
-
-            if (i > 0 && j > 0)
+            // Initialize all values to 0
+            for (int i = 0; i < aux.Length; i++)
             {
-                string newA = a.Substring(0, i - 1);
-                string newB = b.Substring(0, j - 1);
-                int indicator = (newA == newB) ? 0 : 1;
-
-                min = Math.Min(min, DamerauLevenshtein(a, b, i - 1, j - 1) + indicator);
+                for (int j = 0; j < aux[i].Length; j++)
+                    aux[i][j] = 0;
             }
 
-            if (i > 1 && j > 1 && a[i - 1] == b[j - 2] && a[i - 2] == b[j - 1])
-                min = Math.Min(min, DamerauLevenshtein(a, b, i - 2, j - 2) + 1);
+            for (int i = 1; i <= a.Length; i++)
+                aux[i][0] = i;
 
-            return min;
+            for (int j = 1; j <= b.Length; j++)
+                aux[0][j] = j;
+
+            for (int j = 1; j <= b.Length; j++)
+            {
+                for (int i = 1; i <= a.Length; i++)
+                {
+                    int cost;
+                    if (caseSensitive)
+                        cost = (a[i - 1] == b[j - 1]) ? 0 : 1;
+                    else
+                        cost = (Char.ToLower(a[i - 1]) == Char.ToLower(b[j - 1])) ? 0 : 1;
+
+                    int min = aux[i - 1][j] + 1; // Deletion
+                    min = Math.Min(min, aux[i][j - 1] + 1); // Insertion
+                    min = Math.Min(min, aux[i - 1][j - 1] + cost); // Modification
+
+                    if (i > 1 && j > 1 && a[i - 1] == b[j - 2] && a[i - 2] == b[j - 1]) // Transposition
+                        min = Math.Min(min, aux[i - 2][j - 2] + cost);
+
+                    aux[i][j] = min;
+                }
+            }
+
+            return aux[a.Length][b.Length];
         }
     }
 }
