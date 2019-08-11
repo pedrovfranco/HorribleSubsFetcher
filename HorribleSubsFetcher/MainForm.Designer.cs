@@ -39,10 +39,10 @@
             this.runRadioButton = new System.Windows.Forms.RadioButton();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.filenameTextBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.priorityTextBox = new System.Windows.Forms.TextBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.filenameTextBox = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -151,8 +151,16 @@
             this.panel2.Controls.Add(this.exportRadioButton);
             this.panel2.Location = new System.Drawing.Point(198, 195);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(168, 69);
+            this.panel2.Size = new System.Drawing.Size(204, 69);
             this.panel2.TabIndex = 10;
+            // 
+            // filenameTextBox
+            // 
+            this.filenameTextBox.Location = new System.Drawing.Point(82, 41);
+            this.filenameTextBox.Name = "filenameTextBox";
+            this.filenameTextBox.Size = new System.Drawing.Size(112, 20);
+            this.filenameTextBox.TabIndex = 16;
+            this.filenameTextBox.Visible = false;
             // 
             // label3
             // 
@@ -182,14 +190,6 @@
             this.checkBox1.Text = "all";
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // filenameTextBox
-            // 
-            this.filenameTextBox.Location = new System.Drawing.Point(82, 41);
-            this.filenameTextBox.Name = "filenameTextBox";
-            this.filenameTextBox.Size = new System.Drawing.Size(83, 20);
-            this.filenameTextBox.TabIndex = 16;
-            this.filenameTextBox.Visible = false;
             // 
             // MainForm
             // 

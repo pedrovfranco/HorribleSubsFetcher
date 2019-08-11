@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.IO;
 
 namespace HorribleSubsFetcher
 {
@@ -19,21 +20,36 @@ namespace HorribleSubsFetcher
             fetcher = new Fetcher();
 
             nameRadioButton.Checked = true;
+            runRadioButton.Checked = true;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             int showId = 0;
             Task.Run(async () => showId = await GetShowId()).GetAwaiter().GetResult();
+            
+            if (showId == -1)
+            {
+                if (linkRadioButton.Checked)
+                    MessageBox.Show("Wrong link!");
+
+                return;
+            }
 
             List<int> episodes = ParseEpisodes();
+
+            if (episodes == null)
+                return;
+
             string[] priorityList = priorityTextBox.Lines;
 
-            List<string> magnets;
+            List<string> magnets = null;
             Task.Run(async () => magnets = await fetcher.GetMagnetLinks(showId, priorityList, episodes)).GetAwaiter().GetResult();
-            
 
-            int a = 0;
+            if (magnets == null)
+                return;
+
+            Export(magnets);
         }
 
         private List<int> ParseEpisodes()
@@ -69,6 +85,7 @@ namespace HorribleSubsFetcher
             }
             catch (Exception)
             {
+                MessageBox.Show("Error parsing desired episodes!");
                 return null;
             }
         }
@@ -86,6 +103,39 @@ namespace HorribleSubsFetcher
             return -1;
         }
 
+        private void Export(List<string> magnetList)
+        {
+            try
+            {
+                string filename = filenameTextBox.Text;
+                StreamWriter writer = null;
+
+                if (exportRadioButton.Checked && File.Exists(filename))
+                    File.Delete(filename);
+
+                if (exportRadioButton.Checked)
+                    writer = File.CreateText(filename);
+
+                for (int i = 0; i < magnetList.Count; i++)
+                {
+                    if (exportRadioButton.Checked)
+                        writer.WriteLine(magnetList[i]);
+                    else if (runRadioButton.Checked)
+                        System.Diagnostics.Process.Start(magnetList[i]);
+                }
+
+                if (exportRadioButton.Checked)
+                    writer.Close();
+
+                MessageBox.Show("Exported successfully");
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Error exporting!" + e);
+            }
+
+        }
+
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             episodeTextBox.Enabled = !checkBox1.Checked;
@@ -94,6 +144,9 @@ namespace HorribleSubsFetcher
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
             filenameTextBox.Visible = exportRadioButton.Checked;
+
+            if (showTextBox.Text.Trim() != "")
+                filenameTextBox.Text = showTextBox.Text + ".txt";
         }
     }
 }
