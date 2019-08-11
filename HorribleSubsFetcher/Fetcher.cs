@@ -154,39 +154,7 @@ namespace HorribleSubsFetcher
             return result;
         }
 
-        public static int DamerauLevenshtein(string a, string b, int i = Int32.MinValue, int j = Int32.MinValue)
-        {
-            if (i == Int32.MinValue)
-                i = a.Length;
-            if (j == Int32.MinValue)
-                j = b.Length;
-
-            int min = Int32.MaxValue;
-
-            if (i <= 0 && j <= 0)
-                return 0;
-
-            if (i > 0)
-                min = Math.Min(min, DamerauLevenshtein(a, b, i - 1, j) + 1);
-
-            if (j > 0)
-                min = Math.Min(min, DamerauLevenshtein(a, b, i, j - 1) + 1);
-
-            if (i > 0 && j > 0)
-            {
-                string newA = a.Substring(0, i - 1);
-                string newB = b.Substring(0, j - 1);
-                int indicator = (newA == newB) ? 0 : 1;
-
-                min = Math.Min(min, DamerauLevenshtein(a, b, i - 1, j - 1) + indicator);
-            }
-
-            if (i > 1 && j > 1 && a[i - 1] == b[j - 2] && a[i - 2] == b[j - 1])
-                min = Math.Min(min, DamerauLevenshtein(a, b, i - 2, j - 2) + 1);
-
-            return min;
-        }
-
+        
         public static int Levenshtein(string a, string b, bool caseSensitive = false)
         {
             // Declare auxiliary matrix
@@ -246,6 +214,40 @@ namespace HorribleSubsFetcher
             min = Math.Min(min, Levenshtein2(a, b, i - 1, j) + 1);
             min = Math.Min(min, Levenshtein2(a, b, i, j - 1) + 1);
             min = Math.Min(min, Levenshtein2(a, b, i - 1, j - 1) + indicator);
+
+            return min;
+        }
+
+        // Not working properly. Do not use
+        public static int DamerauLevenshtein(string a, string b, int i = Int32.MinValue, int j = Int32.MinValue)
+        {
+            if (i == Int32.MinValue)
+                i = a.Length;
+            if (j == Int32.MinValue)
+                j = b.Length;
+
+            int min = Int32.MaxValue;
+
+            if (i <= 0 && j <= 0)
+                return 0;
+
+            if (i > 0)
+                min = Math.Min(min, DamerauLevenshtein(a, b, i - 1, j) + 1);
+
+            if (j > 0)
+                min = Math.Min(min, DamerauLevenshtein(a, b, i, j - 1) + 1);
+
+            if (i > 0 && j > 0)
+            {
+                string newA = a.Substring(0, i - 1);
+                string newB = b.Substring(0, j - 1);
+                int indicator = (newA == newB) ? 0 : 1;
+
+                min = Math.Min(min, DamerauLevenshtein(a, b, i - 1, j - 1) + indicator);
+            }
+
+            if (i > 1 && j > 1 && a[i - 1] == b[j - 2] && a[i - 2] == b[j - 1])
+                min = Math.Min(min, DamerauLevenshtein(a, b, i - 2, j - 2) + 1);
 
             return min;
         }
