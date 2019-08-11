@@ -1,16 +1,22 @@
-using System.Threading.Tasks;
+﻿using System;
+using System.Windows.Forms;
 
 namespace HorribleSubsFetcher
 {
-    class Program
+    static class Program
     {
-        private static Program _singleton = null;
-
-        static void Main(string[] args)
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        [STAThread]
+        static void Main()
         {
-            Fetcher fetcher = new Fetcher();
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new MainForm());
 
-            Task.Run(async () => await fetcher.Run()).GetAwaiter().GetResult();
+            //Task.Run(async () => await fetcher.Run()).GetAwaiter().GetResult();
+
         }
     }
 }
