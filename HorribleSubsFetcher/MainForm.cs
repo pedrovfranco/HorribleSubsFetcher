@@ -21,13 +21,26 @@ namespace HorribleSubsFetcher
 
             nameRadioButton.Checked = true;
             runRadioButton.Checked = true;
+
+            filenameTextBox.Text = "output.txt";
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            Fetch();
+        }
+
+        private void Fetch()
+        {
+            if (showTextBox.Text.Trim() == "")
+            {
+                MessageBox.Show("Please insert the name of a show or a link in the textbox");
+                return;
+            }
+
             int showId = 0;
             Task.Run(async () => showId = await GetShowId()).GetAwaiter().GetResult();
-            
+
             if (showId == -1)
             {
                 if (linkRadioButton.Checked)
@@ -92,13 +105,10 @@ namespace HorribleSubsFetcher
 
         private async Task<int> GetShowId()
         {
-            if (showTextBox.Text != "")
-            {
-                if (nameRadioButton.Checked)
-                    return await fetcher.GetShowIdByName(showTextBox.Text);
-                else if (linkRadioButton.Checked)
-                    return await fetcher.GetShowIdByLink(showTextBox.Text);
-            }
+            if (nameRadioButton.Checked)
+                return await fetcher.GetShowIdByName(showTextBox.Text);
+            else if (linkRadioButton.Checked)
+                return await fetcher.GetShowIdByLink(showTextBox.Text);
 
             return -1;
         }
@@ -144,9 +154,18 @@ namespace HorribleSubsFetcher
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
             filenameTextBox.Visible = exportRadioButton.Checked;
+        }
 
-            if (showTextBox.Text.Trim() != "")
-                filenameTextBox.Text = showTextBox.Text + ".txt";
+        private void showTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+                Fetch();
+        }
+
+        private void episodeTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+                Fetch();
         }
     }
 }

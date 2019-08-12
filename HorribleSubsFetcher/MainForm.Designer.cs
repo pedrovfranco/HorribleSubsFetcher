@@ -63,6 +63,7 @@
             this.showTextBox.Name = "showTextBox";
             this.showTextBox.Size = new System.Drawing.Size(280, 20);
             this.showTextBox.TabIndex = 1;
+            this.showTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.showTextBox_KeyPress);
             // 
             // nameRadioButton
             // 
@@ -92,6 +93,7 @@
             this.episodeTextBox.Name = "episodeTextBox";
             this.episodeTextBox.Size = new System.Drawing.Size(136, 20);
             this.episodeTextBox.TabIndex = 4;
+            this.episodeTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.episodeTextBox_KeyPress);
             // 
             // label1
             // 

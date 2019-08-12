@@ -110,8 +110,11 @@ namespace HorribleSubsFetcher
             {
                 for (int i = 0; i < episodeList.Count; i++)
                 {
-                    magnet = GetSingleEpisode(nodes[episodeList[i]-1], resolutionPriority);
-                    result.Add(magnet);
+                    if (episodeList[i] >= 1 && episodeList[i] <= nodes.Length)
+                    {
+                        magnet = GetSingleEpisode(nodes[episodeList[i] - 1], resolutionPriority);
+                        result.Add(magnet);
+                    }
                 }
             }
 
