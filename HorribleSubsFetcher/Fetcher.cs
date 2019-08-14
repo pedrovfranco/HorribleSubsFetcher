@@ -14,6 +14,8 @@ namespace HorribleSubsFetcher
 
         private static readonly Uri searchLink = new Uri("https://horriblesubs.info/shows/");
 
+        public double minShowNameMatch = 0.7;
+
         public Fetcher()
         {
             httpClient = new HttpClient();
@@ -54,25 +56,28 @@ namespace HorribleSubsFetcher
                 HtmlNode[] result = html.DocumentNode.QuerySelectorAll("div .ind-show").ToArray();
 
                 // Searches for the title with the closest match to the input show name
-                int leastDistance = Int32.MaxValue;
+                double bestMatch = 0;
                 int leastDistanceIndex = -1;
                 for (int i = 0; i < result.Length; i++)
                 {
                     string title = result[i].FirstChild.GetAttributeValue("title", null);
                     if (title != null)
                     {
-                        int distance = FuzzyMatching.DamerauLevenshtein(name, title);
+                        double matchPercentage = FuzzyMatching.DamerauLevenshteinPercentage(name, title);
 
-                        if (distance < leastDistance)
+                        if (matchPercentage >= minShowNameMatch && matchPercentage > bestMatch)
                         {
-                            leastDistance = distance;
+                            bestMatch = matchPercentage;
                             leastDistanceIndex = i;
                         }
 
-                        if (distance == 0)
+                        if (matchPercentage == 1) // Perfect match
                             break;
                     }
                 }
+
+                if (leastDistanceIndex == -1)
+                    return -1;
 
                 string refLink = result[leastDistanceIndex].FirstChild.GetAttributeValue("href", null);
 

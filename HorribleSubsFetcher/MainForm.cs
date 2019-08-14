@@ -43,8 +43,11 @@ namespace HorribleSubsFetcher
 
             if (showId == -1)
             {
-                if (linkRadioButton.Checked)
+                if (nameRadioButton.Checked)
+                    MessageBox.Show("Failed to find show!");
+                else if (linkRadioButton.Checked)
                     MessageBox.Show("Wrong link!");
+
 
                 return;
             }

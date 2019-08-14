@@ -93,5 +93,10 @@ namespace HorribleSubsFetcher
 
             return aux[a.Length][b.Length];
         }
+
+        public static double DamerauLevenshteinPercentage(string a, string b)
+        {
+            return 1.0 - ((double)DamerauLevenshtein(a, b) / Math.Max(a.Length, b.Length));
+        }
     }
 }
