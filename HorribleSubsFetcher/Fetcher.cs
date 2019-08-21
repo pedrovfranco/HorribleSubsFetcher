@@ -94,7 +94,7 @@ namespace HorribleSubsFetcher
             }
         }
 
-        public async Task<List<string>> GetMagnetLinks(int showId, string[] resolutionPriority = null, List<int> episodeList = null)
+        public async Task<List<string>> GetMagnetLinks(int showId, string[] resolutionPriority = null, List<int> episodeList = null, List<int> failedEpisodes = null)
         {
             if (resolutionPriority == null)
                 resolutionPriority = new string[] { "1080p", "720p", "480p" };
@@ -120,6 +120,8 @@ namespace HorribleSubsFetcher
                         magnet = GetSingleEpisode(nodes[episodeList[i] - 1], resolutionPriority);
                         result.Add(magnet);
                     }
+                    else if (failedEpisodes != null)
+                        failedEpisodes.Add(episodeList[i]);
                 }
             }
 
