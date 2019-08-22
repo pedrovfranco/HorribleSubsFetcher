@@ -128,6 +128,24 @@ namespace HorribleSubsFetcher
             return result;
         }
 
+        public List<string> GetMagnetLinks(string[] resolutionPriority = null, HtmlNode[] nodes = null, List<int> failedEpisodes = null)
+        {
+            if (resolutionPriority == null)
+                resolutionPriority = new string[] { "1080p", "720p", "480p" };
+
+            List<string> result = new List<string>();
+            string magnet = "";
+
+            for (int i = 0; i < nodes.Length; i++)
+            {
+                magnet = GetSingleEpisode(nodes[i], resolutionPriority);
+                result.Add(magnet);
+            }
+
+            return result;
+        }
+
+
         public string GetSingleEpisode(HtmlNode node, string[] resolutionPriority)
         {
             int j;
@@ -159,9 +177,26 @@ namespace HorribleSubsFetcher
             var html = new HtmlDocument();
             html.LoadHtml(content);
 
-            HtmlNode[] result = html.DocumentNode.QuerySelectorAll(".rls-info-container").ToArray();
+            HtmlNode[] result = html.DocumentNode.QuerySelectorAll(".rls-info-container").OrderBy(x => x.Id).ToArray();
 
-            return result.OrderBy(x => x.Id).ToArray();
+            return result;
+        }
+
+        public async Task<HtmlNode[]> GetLastEpisode(int showId)
+        {
+            var response = await httpClient.GetAsync($"https://horriblesubs.info/api.php?method=getshows&type=show&showid={showId}");
+            string content = await response.Content.ReadAsStringAsync();
+
+            var html = new HtmlDocument();
+            html.LoadHtml(content);
+
+            HtmlNode[] result = html.DocumentNode.QuerySelectorAll(".rls-info-container").OrderBy(x => x.Id).ToArray();
+
+            HtmlNode last = result[result.Length - 1];
+            result = new HtmlNode[1];
+            result[0] = last;
+
+            return result;
         }
 
     }

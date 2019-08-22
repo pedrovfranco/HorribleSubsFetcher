@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
+            this.fetchButton = new System.Windows.Forms.Button();
             this.showTextBox = new System.Windows.Forms.TextBox();
             this.nameRadioButton = new System.Windows.Forms.RadioButton();
             this.linkRadioButton = new System.Windows.Forms.RadioButton();
@@ -42,20 +42,21 @@
             this.filenameTextBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.priorityTextBox = new System.Windows.Forms.TextBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.lastCheckBox = new System.Windows.Forms.CheckBox();
+            this.allCheckBox = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
-            // button1
+            // fetchButton
             // 
-            this.button1.Location = new System.Drawing.Point(172, 151);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(76, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Fetch";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.fetchButton.Location = new System.Drawing.Point(172, 151);
+            this.fetchButton.Name = "fetchButton";
+            this.fetchButton.Size = new System.Drawing.Size(76, 23);
+            this.fetchButton.TabIndex = 0;
+            this.fetchButton.Text = "Fetch";
+            this.fetchButton.UseVisualStyleBackColor = true;
+            this.fetchButton.Click += new System.EventHandler(this.fetchButton_Click);
             // 
             // showTextBox
             // 
@@ -124,7 +125,7 @@
             this.exportRadioButton.TabStop = true;
             this.exportRadioButton.Text = "Export to file";
             this.exportRadioButton.UseVisualStyleBackColor = true;
-            this.exportRadioButton.CheckedChanged += new System.EventHandler(this.radioButton1_CheckedChanged);
+            this.exportRadioButton.CheckedChanged += new System.EventHandler(this.exportButton_CheckedChanged);
             // 
             // runRadioButton
             // 
@@ -182,23 +183,35 @@
             this.priorityTextBox.TabIndex = 14;
             this.priorityTextBox.Text = "1080p\r\n720p\r\n480p";
             // 
-            // checkBox1
+            // lastCheckBox
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(295, 120);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(36, 17);
-            this.checkBox1.TabIndex = 15;
-            this.checkBox1.Text = "all";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            this.lastCheckBox.AutoSize = true;
+            this.lastCheckBox.Location = new System.Drawing.Point(285, 121);
+            this.lastCheckBox.Name = "lastCheckBox";
+            this.lastCheckBox.Size = new System.Drawing.Size(86, 17);
+            this.lastCheckBox.TabIndex = 15;
+            this.lastCheckBox.Text = "Last episode";
+            this.lastCheckBox.UseVisualStyleBackColor = true;
+            this.lastCheckBox.CheckedChanged += new System.EventHandler(this.lastCheckBox_CheckedChanged);
+            // 
+            // allCheckBox
+            // 
+            this.allCheckBox.AutoSize = true;
+            this.allCheckBox.Location = new System.Drawing.Point(368, 121);
+            this.allCheckBox.Name = "allCheckBox";
+            this.allCheckBox.Size = new System.Drawing.Size(37, 17);
+            this.allCheckBox.TabIndex = 16;
+            this.allCheckBox.Text = "All";
+            this.allCheckBox.UseVisualStyleBackColor = true;
+            this.allCheckBox.CheckedChanged += new System.EventHandler(this.allCheckBox_CheckedChanged);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(404, 310);
-            this.Controls.Add(this.checkBox1);
+            this.ClientSize = new System.Drawing.Size(411, 310);
+            this.Controls.Add(this.allCheckBox);
+            this.Controls.Add(this.lastCheckBox);
             this.Controls.Add(this.priorityTextBox);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.panel2);
@@ -207,7 +220,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.episodeTextBox);
             this.Controls.Add(this.showTextBox);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.fetchButton);
             this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "HorribleSubsFetcher";
@@ -223,7 +236,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button fetchButton;
         private System.Windows.Forms.TextBox showTextBox;
         private System.Windows.Forms.RadioButton nameRadioButton;
         private System.Windows.Forms.RadioButton linkRadioButton;
@@ -236,7 +249,8 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox priorityTextBox;
-        private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.TextBox filenameTextBox;
+        private System.Windows.Forms.CheckBox lastCheckBox;
+        private System.Windows.Forms.CheckBox allCheckBox;
     }
 }

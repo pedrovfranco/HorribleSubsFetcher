@@ -26,7 +26,7 @@ namespace HorribleSubsFetcher
             filenameTextBox.Text = "output.txt";
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void fetchButton_Click(object sender, EventArgs e)
         {
             Fetch();
         }
@@ -97,20 +97,31 @@ namespace HorribleSubsFetcher
                 else if (linkRadioButton.Checked)
                     MessageBox.Show("Wrong link!");
 
-
                 return;
             }
-
-            List<int> episodes = ParseEpisodes();
-
-            if (episodes == null)
-                return;
 
             string[] priorityList = priorityTextBox.Lines;
 
             List<string> magnets = null;
             List<int> failedEpisodes = new List<int>();
-            Task.Run(async () => magnets = await fetcher.GetMagnetLinks(showId, priorityList, episodes, failedEpisodes)).GetAwaiter().GetResult();
+
+            if (lastCheckBox.Checked) // Last episode only
+            {
+                Task.Run(async () => magnets = fetcher.GetMagnetLinks(priorityList, await fetcher.GetLastEpisode(showId), failedEpisodes)).GetAwaiter().GetResult();
+            }
+            else if (allCheckBox.Checked) // All episodes
+            {
+                Task.Run(async () => magnets = fetcher.GetMagnetLinks(priorityList, await fetcher.GetAllEpisodes(showId), failedEpisodes)).GetAwaiter().GetResult();
+            }
+            else // Episodes list from episodeTextBox
+            {
+                List<int> episodes = ParseEpisodes();
+
+                if (episodes == null)
+                    return;
+
+                Task.Run(async () => magnets = await fetcher.GetMagnetLinks(showId, priorityList, episodes, failedEpisodes)).GetAwaiter().GetResult();
+            }
 
             if (magnets == null)
                 return;
@@ -173,12 +184,7 @@ namespace HorribleSubsFetcher
 
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            episodeTextBox.Enabled = !checkBox1.Checked;
-        }
-
-        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        private void exportButton_CheckedChanged(object sender, EventArgs e)
         {
             filenameTextBox.Visible = exportRadioButton.Checked;
         }
@@ -193,6 +199,27 @@ namespace HorribleSubsFetcher
         {
             if (e.KeyChar == (char)Keys.Enter)
                 Fetch();
+        }
+
+        private void lastCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (lastCheckBox.Checked && allCheckBox.Checked)
+                allCheckBox.Checked = false;
+
+            checkEpisodeTextBox();
+        }
+
+        private void allCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (lastCheckBox.Checked && allCheckBox.Checked)
+                lastCheckBox.Checked = false;
+
+            checkEpisodeTextBox();
+        }
+
+        private void checkEpisodeTextBox()
+        {
+            episodeTextBox.Enabled = !(lastCheckBox.Checked || allCheckBox.Checked);
         }
     }
 }
